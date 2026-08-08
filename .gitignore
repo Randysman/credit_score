@@ -81,3 +81,4 @@ sdist/
 var/
 wheels/
 *.egg-info/
+.ipynb_checkpoints/
