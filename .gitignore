@@ -82,3 +82,6 @@ var/
 wheels/
 *.egg-info/
 .ipynb_checkpoints/
+catboost_info
+/catboost_info
+./catboost_info
