@@ -55,7 +55,8 @@ catboost_model = CatBoostClassifier(
     bagging_temperature=1.0,
     loss_function='Logloss',
     random_seed=RANDOM_STATE,
-    verbose=False
+    verbose=False,
+    allow_writing_files=False
 )
 
 
