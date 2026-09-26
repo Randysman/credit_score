@@ -103,8 +103,6 @@ print(f'PR-AUC: {pr_auc:.4f}')
 print(f'Brier Score: {brier:.4f}')
 
 
-MODELS_DIR = Path('models')
-
 MODELS_DIR.mkdir(
     parents=True,
     exist_ok=True
