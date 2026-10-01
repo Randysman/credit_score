@@ -17,7 +17,10 @@ model_config = joblib.load(
     MODELS_DIR / 'model_config.joblib'
 )
 
-THRESHOLD = model_config['threshold']
+THRESHOLD = float(
+    model_config['threshold']
+)
+
 
 RAW_FEATURES = [
     'RevolvingUtilizationOfUnsecuredLines',
@@ -33,11 +36,16 @@ RAW_FEATURES = [
 ]
 
 
-def prepare_input(data: dict) -> pd.DataFrame:
+def prepare_input(
+    data: dict
+    ) -> pd.DataFrame:
     row = {}
 
     for feature in RAW_FEATURES:
-        value = data.get(feature, np.nan)
+        value = data.get(
+            feature,
+            np.nan
+        )
 
         row[feature] = (
             np.nan
@@ -48,8 +56,22 @@ def prepare_input(data: dict) -> pd.DataFrame:
     return pd.DataFrame([row])
 
 
-def predict_risk(data: dict) -> dict:
-    dataframe = prepare_input(data)
+def get_missing_features(
+    data: dict
+    ) -> list[str]:
+    return [
+        feature
+        for feature in RAW_FEATURES
+        if data.get(feature) is None
+    ]
+
+
+def predict_risk(
+    data: dict
+    ) -> dict:
+    dataframe = prepare_input(
+        data
+    )
 
     probability = model.predict_proba(
         dataframe
@@ -64,5 +86,5 @@ def predict_risk(data: dict) -> dict:
     return {
         'default_probability': float(probability),
         'risk_class': risk_class,
-        'threshold': float(THRESHOLD)
+        'threshold': THRESHOLD
     }
