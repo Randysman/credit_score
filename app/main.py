@@ -34,7 +34,7 @@ app = FastAPI(
 def root() -> dict:
     return {
         'service': 'Credit Scoring API',
-        'version': '1.0.0',
+        'version': API_VERSION,
         'docs': '/docs'
     }
 
