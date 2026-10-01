@@ -3,7 +3,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class QuickCreditApplication(BaseModel):
     model_config = ConfigDict(
-        populate_by_name=True
+        populate_by_name=True,
+        extra='forbid'
     )
 
     age: int = Field(
