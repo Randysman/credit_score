@@ -6,19 +6,39 @@ from app.schemas import (
     QuickCreditApplication,
     QuickPredictionResponse
 )
-from app.service import predict_risk
+from app.service import (
+    RAW_FEATURES,
+    get_missing_features,
+    predict_risk
+)
 
 
 app = FastAPI(
     title='Credit Scoring API',
     description=(
-        'API for estimating of credis score '
+        'API for estimating the probability '
+        'of serious credit delinquency.'
     ),
     version='1.0.0'
 )
 
 
-@app.get('/health')
+@app.get(
+    '/',
+    summary='API information'
+)
+def root() -> dict:
+    return {
+        'service': 'Credit Scoring API',
+        'version': '1.0.0',
+        'docs': '/docs'
+    }
+
+
+@app.get(
+    '/health',
+    summary='Health check'
+)
 def health() -> dict:
     return {
         'status': 'ok'
@@ -27,7 +47,8 @@ def health() -> dict:
 
 @app.post(
     '/predict/quick',
-    response_model=QuickPredictionResponse
+    response_model=QuickPredictionResponse,
+    summary='Preliminary credit risk estimation'
 )
 def predict_quick(
     application: QuickCreditApplication
@@ -37,17 +58,30 @@ def predict_quick(
         exclude_none=True
     )
 
-    prediction = predict_risk(data)
+    prediction = predict_risk(
+        data
+    )
+
+    missing_features = get_missing_features(
+        data
+    )
 
     return QuickPredictionResponse(
         **prediction,
-        is_preliminary=True
+        is_preliminary=True,
+        provided_features=(
+            len(RAW_FEATURES)
+            - len(missing_features)
+        ),
+        total_features=len(RAW_FEATURES),
+        missing_features=missing_features
     )
 
 
 @app.post(
     '/predict',
-    response_model=PredictionResponse
+    response_model=PredictionResponse,
+    summary='Full credit risk estimation'
 )
 def predict(
     application: CreditApplication
@@ -56,7 +90,9 @@ def predict(
         by_alias=True
     )
 
-    prediction = predict_risk(data)
+    prediction = predict_risk(
+        data
+    )
 
     return PredictionResponse(
         **prediction
