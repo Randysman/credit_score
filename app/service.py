@@ -1,20 +1,19 @@
-from pathlib import Path
-
 import joblib
 import numpy as np
 import pandas as pd
 
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-MODELS_DIR = BASE_DIR / 'models'
+from app.config import (
+    MODEL_CONFIG_PATH,
+    MODEL_PATH
+)
 
 
 model = joblib.load(
-    MODELS_DIR / 'credit_scoring_pipeline.joblib'
+    MODEL_PATH
 )
 
 model_config = joblib.load(
-    MODELS_DIR / 'model_config.joblib'
+    MODEL_CONFIG_PATH
 )
 
 THRESHOLD = float(
@@ -88,3 +87,7 @@ def predict_risk(
         'risk_class': risk_class,
         'threshold': THRESHOLD
     }
+
+
+def get_model_info() -> dict:
+    return model_config

@@ -105,3 +105,19 @@ class QuickPredictionResponse(PredictionResponse):
     provided_features: int
     total_features: int
     missing_features: list[str]
+
+
+class ModelMetrics(BaseModel):
+    roc_auc: float
+    pr_auc: float
+    brier_score: float
+
+
+class ModelInfoResponse(BaseModel):
+    model_name: str
+    model_version: str
+    model_type: str
+    threshold: float
+    target: str
+    positive_class: int
+    metrics: ModelMetrics

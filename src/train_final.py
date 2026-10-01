@@ -117,9 +117,17 @@ joblib.dump(
 
 
 model_config = {
+    'model_name': 'credit_scoring_catboost',
+    'model_version': '1.0.0',
+    'model_type': 'CatBoostClassifier',
     'threshold': FINAL_THRESHOLD,
     'target': TARGET,
-    'positive_class': 1
+    'positive_class': 1,
+    'metrics': {
+        'roc_auc': float(roc_auc),
+        'pr_auc': float(pr_auc),
+        'brier_score': float(brier)
+    }
 }
 
 joblib.dump(

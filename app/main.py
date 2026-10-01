@@ -1,14 +1,18 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 
+from app.config import API_VERSION
 from app.schemas import (
     CreditApplication,
+    ModelInfoResponse,
     PredictionResponse,
     QuickCreditApplication,
     QuickPredictionResponse
 )
+from app.security import verify_internal_api_key
 from app.service import (
     RAW_FEATURES,
     get_missing_features,
+    get_model_info,
     predict_risk
 )
 
@@ -19,7 +23,7 @@ app = FastAPI(
         'API for estimating the probability '
         'of serious credit delinquency.'
     ),
-    version='1.0.0'
+    version=API_VERSION
 )
 
 
@@ -96,4 +100,20 @@ def predict(
 
     return PredictionResponse(
         **prediction
+    )
+
+
+@app.get(
+    '/internal/model-info',
+    response_model=ModelInfoResponse,
+    dependencies=[
+        Depends(verify_internal_api_key)
+    ],
+    summary='Model information'
+)
+def model_info() -> ModelInfoResponse:
+    info = get_model_info()
+
+    return ModelInfoResponse(
+        **info
     )
