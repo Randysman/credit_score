@@ -115,6 +115,16 @@ def root() -> dict:
 
 
 @app.get(
+    '/live',
+    summary='Liveness check'
+)
+def live() -> dict:
+    return {
+        'status': 'alive'
+    }
+
+
+@app.get(
     '/health',
     summary='Health check'
 )
