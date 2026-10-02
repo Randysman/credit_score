@@ -5,7 +5,9 @@ import joblib
 from fastapi import (
     Depends,
     FastAPI,
-    Request
+    Request,
+    HTTPException,
+    status
 )
 
 from app.config import (
@@ -95,9 +97,23 @@ def root() -> dict:
     '/health',
     summary='Health check'
 )
-def health() -> dict:
+def health(
+    request: Request
+) -> dict:
+    service = getattr(
+        request.app.state,
+        'scoring_service',
+        None
+    )
+
+    if service is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail='Scoring service is not ready'
+        )
+
     return {
-        'status': 'ok'
+        'status': 'ready'
     }
 
 
