@@ -58,6 +58,27 @@ async def lifespan(
             'Failed to load model artifacts'
         ) from error
 
+    required_config_keys = {
+        'model_name',
+        'model_version',
+        'model_type',
+        'threshold',
+        'target',
+        'positive_class',
+        'metrics'
+    }
+
+    missing_keys = (
+        required_config_keys
+        - model_config.keys()
+    )
+
+    if missing_keys:
+        raise RuntimeError(
+            f'Model config is missing keys: '
+            f'{sorted(missing_keys)}'
+        )
+
     app.state.scoring_service = (
         CreditScoringService(
             model=model,
