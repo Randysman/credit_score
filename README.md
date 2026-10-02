@@ -70,3 +70,29 @@ Swagger documentation:
 
 ```text
 http://127.0.0.1:8000/docs
+```
+
+## Installation
+```bash
+git clone https://github.com/Randysman/credit_score.git
+cd credit_score
+
+python -m venv venv
+pip install -r requirements-api.txt
+
+uvicorn app.main:app --reload
+```
+
+## Docker
+```bash
+docker build -t credit-scoring-api .
+docker run -p 8000:8000 -e INTERNAL_API_KEY=your-secret-key credit-scoring-api
+```
+
+Visit **http://127.0.0.1:8000/docs**
+
+## Author
+
+**Danil**
+
+GitHub: https://github.com/Randysman
